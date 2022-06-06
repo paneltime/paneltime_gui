@@ -38,8 +38,8 @@ with open(path.join(here, 'README.txt'), encoding='utf-8') as f:
 	long_description = f.read()
 
 setup(
-    name='paneltime_gui',
-    ext_modules=ext,
+    name='paneltimegui',
+    ext_modules=[],
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
@@ -49,7 +49,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/espensirnes/paneltime_gui',
+    url='https://github.com/espensirnes/paneltimegui',
 
     # Author details
     author='Espen Sirnes',
@@ -95,7 +95,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     #**************************************************************************REMOVED>
-    install_requires=['tkinter'],
+    install_requires=['tk'],
 	extras_require={},	
     #**************************************************************************<REMOVED
 
