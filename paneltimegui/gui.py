@@ -5,16 +5,17 @@ import tkinter as tk
 from tkinter import ttk
 from multiprocessing import pool
 import sys
-from gui import gui_charts
-from gui import gui_functions as guif
+sys.path.append(__file__.replace("gui.py",''))
+import gui_charts
+import gui_functions as guif
 import functions as fu
 import os
-from gui import gui_buttons
+import gui_buttons
 import functions as fu
-from gui import gui_right_tabs
-from gui import gui_scrolltext
-from gui import gui_main_tabs
-import tempstore
+import gui_right_tabs
+import gui_scrolltext
+import gui_main_tabs
+import gui_tempstore
 import numpy as np
 import traceback
 FONT_SIZE=10	
@@ -188,7 +189,7 @@ class window(tk.Tk):
 		
 	def on_closing(self):
 		if self.right_tabs.preferences.options.save_datasets.value:
-			tempstore.save_obj(tempstore.fname_datasets,self.right_tabs.data_tree.datasets)		
+			gui_tempstore.save_obj(gui_tempstore.fname_datasets,self.right_tabs.data_tree.datasets)		
 		self.data.save()
 		exit()			
 	
@@ -207,7 +208,7 @@ class stdout_redir():
 
 class datastore(dict):
 	def __init__(self,window):
-		d=tempstore.load_obj(tempstore.fname_window)
+		d=gui_tempstore.load_obj(gui_tempstore.fname_window)
 		if d is None or type(d)!=dict:
 			dict.__init__(self)
 		else:
@@ -240,8 +241,8 @@ class datastore(dict):
 		
 	def save(self):
 		self.win.main_tabs._tabs.save_all_in_temp()
-		tempstore.save_obj(tempstore.fname_window,dict(self))
-		tempstore.save_zip()
+		gui_tempstore.save_obj(gui_tempstore.fname_window,dict(self))
+		gui_tempstore.save_zip()
 
 				
 	

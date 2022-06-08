@@ -8,7 +8,7 @@ from multiprocessing import pool
 import numpy as np
 import stat_functions as stat
 from scipy import stats as scstats
-from gui import gui_functions as guif
+import gui_functions as guif
 import os
 import functions as fu
 
@@ -24,7 +24,6 @@ class process_charts(ttk.Frame):
 		self.initialized=False
 		self.subplot=tabs.subplot
 		self.print_subplot=tabs.print_subplot
-		self.img_tmp=tabs.img_tmp
 		
 	def get_images_for_storage(self):
 		charts=[]
@@ -60,7 +59,7 @@ class process_charts(ttk.Frame):
 			self.charts.append(tk.Label(frm,background='white'))
 			self.charts[i].grid(row=0,column=0)	
 			chart_path=os.path.join(os.getcwd(),'img',f'chart{i}.png')
-			self.charts[i].path=fu.obtain_fname(chart_path)# self.img_tmp.tempfile()
+			self.charts[i].path=fu.obtain_fname(chart_path)
 			guif.setbutton(frm, 'Save image', lambda: self.save(self.n_charts-i-1),bg='white').grid(row=1,column=0)
 			frm.grid(row=i+1)
 		

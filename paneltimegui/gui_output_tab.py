@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import tkinter as tk
-from gui import gui_charts
-from gui import gui_scrolltext
-from gui import gui_scatter_charts
+import gui_charts
+import gui_scrolltext
+import gui_scatter_charts
 from tkinter import ttk
 from tkinter import font
 import functions as fu
@@ -150,19 +150,26 @@ class output_tab(tk.Frame):
 	def get_stored(self):
 		"Obtains stored states of the buttons"
 		d=self.window.data['menu_selections']
+		return
 		if not self.widget.stored_output_data.options is None:
 			d = self.widget.stored_output_data.options
 		for i in self.menu_buttons:
-			self.menu_buttons[i].button_main['text']  =   d[i].button_main['text']
-			self.menu_buttons[i].button_main['bg']    =   d[i].button_main['bg']
-			self.menu_buttons[i].button_main['fg']    =   d[i].button_main['fg']
-			if i in ['DIGITS', 'REGRESSION']:
-				for j in self.menu_buttons[i].buttons_sub:
-					if not j in ["['JOINED', 'JOINED LONG', 'disabled:JOINED']",
-											   "['NORMAL', 'HTML', 'LATEX', 'RTF', 'INTERNAL']"]:				
-						self.menu_buttons[i].buttons_sub[j]['text'] = d[i].buttons_sub[j]['text']
-						self.menu_buttons[i].buttons_sub[j]['fg']   = d[i].buttons_sub[j]['fg']
-						self.menu_buttons[i].buttons_sub[j]['bg']   = d[i].buttons_sub[j]['bg']
+			self.format_menu_buttons(d, i)
+
+	def format_menu_buttons(self, d, button_name):
+		i = button_name
+		if d[i] == {}:
+			return
+		self.menu_buttons[i].button_main['text']  =   d[i].button_main['text']
+		self.menu_buttons[i].button_main['bg']    =   d[i].button_main['bg']
+		self.menu_buttons[i].button_main['fg']    =   d[i].button_main['fg']
+		if i in ['DIGITS', 'REGRESSION']:
+			for j in self.menu_buttons[i].buttons_sub:
+				if not j in ["['JOINED', 'JOINED LONG', 'disabled:JOINED']",
+										   "['NORMAL', 'HTML', 'LATEX', 'RTF', 'INTERNAL']"]:				
+					self.menu_buttons[i].buttons_sub[j]['text'] = d[i].buttons_sub[j]['text']
+					self.menu_buttons[i].buttons_sub[j]['fg']   = d[i].buttons_sub[j]['fg']
+					self.menu_buttons[i].buttons_sub[j]['bg']   = d[i].buttons_sub[j]['bg']		
 
 					
 	def store_options(self):

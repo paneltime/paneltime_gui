@@ -1,1 +1,2 @@
-include src/*.ico
+graft paneltimegui/gui
+include paneltimegui/*.ico

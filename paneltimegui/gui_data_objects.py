@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 from tkinter import ttk
-from gui import gui_charts
+import gui_charts
 import functions as fu
 import time
-from gui import gui_scrolltext
-from gui import gui_script_handling
-from gui import gui_tooltip
-from gui import gui_sql
+import gui_scrolltext
+import gui_script_handling
+import gui_tooltip
+import gui_sql
 import options as options_module
 from tkinter import filedialog
 import json
 import os
-import tempstore
+import gui_tempstore
 import time
 import paneltime as pt
 import numpy as np
@@ -177,7 +177,7 @@ data=dict()\ndata['{f}']=load('{filename}')"""
 		dataset.get_data_editor(self.main_tabs)
 		
 	def load(self):
-		self.datasets=tempstore.load_obj(tempstore.fname_datasets)
+		self.datasets=gui_tempstore.load_obj(gui_tempstore.fname_datasets)
 		if self.datasets is None:
 			self.datasets=datasets()
 			return
