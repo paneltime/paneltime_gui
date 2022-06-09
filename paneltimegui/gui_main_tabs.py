@@ -3,14 +3,13 @@
 import tkinter as tk
 from tkinter import ttk
 import gui_scrolltext
+import gui_functions as fu
 import gui_output_tab
-import functions as fu
 import os
 from tkinter import filedialog
 import types
 import numpy as np
 from multiprocessing import pool
-import paneltime as pt
 import traceback
 from matplotlib import pyplot  as plt
 import gui_tempstore

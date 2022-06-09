@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter import ttk
 import gui_charts
-import functions as fu
+import gui_functions as fu
 import time
 import gui_scrolltext
 import gui_script_handling
@@ -15,7 +15,6 @@ import json
 import os
 import gui_tempstore
 import time
-import paneltime as pt
 import numpy as np
 import pandas as pd
 

@@ -3,14 +3,14 @@
 
 import tkinter as tk
 from tkinter import ttk
-from multiprocessing import pool
-
 import numpy as np
-import stat_functions as stat
 from scipy import stats as scstats
-import gui_functions as guif
+from paneltimegui import gui_functions as guif
 import os
-import functions as fu
+import shutil
+from paneltime import stat_functions as stat
+from matplotlib import pyplot  as plt
+
 
 
 
@@ -20,26 +20,11 @@ class process_charts(ttk.Frame):
 		style.configure("TFrame", background='white')		
 		ttk.Frame.__init__(self,master,style='new.TFrame')
 		self.window=window
-		self.ll=None	
-		self.initialized=False
 		self.subplot=tabs.subplot
 		self.print_subplot=tabs.print_subplot
-		
-	def get_images_for_storage(self):
-		charts=[]
-		if not hasattr(self, 'charts'):
-			return
-		for i in self.charts:
-			charts.append((i.path,i.name))
-		return charts
-		
-	def charts_from_stored(self,charts):
+		self.generate = GenerateCharts()
 		self.add_content()
-		if charts is None:
-			return
-		for i in range(len(charts)):
-			path,name=charts[i]
-			guif.display_from_img(self.charts[i],path,name,i)
+
 		
 	def add_content(self):
 		self.n_charts=3
@@ -47,7 +32,6 @@ class process_charts(ttk.Frame):
 		for i in range(self.n_charts+1):
 			self.rowconfigure(i,weight=1)
 			
-
 		tk.Label(self,text='Charts on normalized residuals:',bg='white',font='Tahoma 10 bold').grid(row=0,column=0)			
 
 		self.charts=[]
@@ -59,12 +43,12 @@ class process_charts(ttk.Frame):
 			self.charts.append(tk.Label(frm,background='white'))
 			self.charts[i].grid(row=0,column=0)	
 			chart_path=os.path.join(os.getcwd(),'img',f'chart{i}.png')
-			self.charts[i].path=fu.obtain_fname(chart_path)
+			self.charts[i].path=chart_path
 			guif.setbutton(frm, 'Save image', lambda: self.save(self.n_charts-i-1),bg='white').grid(row=1,column=0)
 			frm.grid(row=i+1)
 		
 	def save(self,i,f=None):
-		if not hasattr(self.charts[i],'graph_file') or not hasattr(self,'panel'):
+		if not hasattr(self.charts[i],'path'):
 			print('No graphics displayed yet')
 			return
 		name=self.charts[i].name
@@ -72,80 +56,93 @@ class process_charts(ttk.Frame):
 			f = tk.filedialog.asksaveasfile(mode='bw', defaultextension=".jpg",initialfile=f"{name}.jpg")		
 		if f is None:
 			return
-		flst=[
-			self.histogram,
-			self.correlogram,
-			self.correlogram_variance,
+		shutil.copyfile(self.charts[i].path, f)
+		
+	def plot(self,panel, ll):
+		self.generate.save_all(panel, ll)
+		for c in self.charts:
+			plot_to_chart(c)
+
+def plot_to_chart(chart):
+	return#currently disabled, in development
+	if hasattr(chart,'graph_file'):
+		chart.graph_file.close()
+	chart.graph_file=Image.open(chart.path)
+	img = ImageTk.PhotoImage(chart.graph_file,master=chart)
+	chart.configure(image=img)
+	chart.graph_img=img	
+
+
+
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+
+
+
+class GenerateCharts():
+	def __init__(self):
+		return#currently disabled, in development
+		self.subplot=plt.subplots(1,figsize=(4,2.5),dpi=75)
+		self.chart_list=[
+			['histogram',self.histogram],
+			['correlogram',self.correlogram],
+			['correlogram_variance',self.correlogram_variance]
 		]
-		flst[i](self.ll,self.print_subplot,f)
-		f.close()
-		
-	def initialize(self,panel):
-		if not self.initialized:
-			self.panel=panel
-			self.add_content()
-			self.initialized=True		
-		
-	def plot(self,ll,panel):
-		self.initialize(panel)
-		self.ll=ll
-		self.histogram(ll,self.subplot)
-		self.correlogram(ll,self.subplot)
-		self.correlogram_variance(ll,self.subplot)	
-		
-		
-	def histogram(self,ll,subplot,f=None):
-		N,T,k=self.panel.X.shape
+
+	def save_all(self, panel, ll):
+		return#currently disabled, in development
+		for name,chart in self.chart_list:
+			chart(panel, ll,self.subplot,f'img/{name}.png')				
+
+	def histogram(self, panel,ll,subplot,f):
+		return#currently disabled, in development
+		N,T,k = panel.X.shape
 		fgr,axs=subplot
-		n=ll.e_norm_centered.shape[2]
-		e=ll.e_norm_centered[self.panel.included[2]].flatten()
-		N=e.shape[0]
-		e=e.reshape((N,1))
-		
-		grid_range=4
-		grid_step=0.05	
-		h,grid=histogram(e,grid_range,grid_step)
-		norm=scstats.norm.pdf(grid)*grid_step	
-		
+		n = ll.e_norm_centered.shape[2]
+		e = ll.e_norm_centered[panel.included[2]].flatten()
+		N = e.shape[0]
+		e = e.reshape((N,1))
+
+		grid_range = 4
+		grid_step = 0.05	
+		h,grid = histogram(e,grid_range,grid_step)
+		norm = scstats.norm.pdf(grid)*grid_step	
+
 		axs.bar(grid,h,color='grey', width=0.025,label='histogram')
 		axs.plot(grid,norm,'green',label='normal distribution')
 		axs.legend(prop={'size': 6})
 		name='Histogram - frequency'
 		axs.set_title(name)
-		if f is None:
-			guif.display(self.charts[0],name,0,subplot)
-		else:
-			guif.save(subplot,f)
+		save(subplot,f)
 
-	def correlogram(self,ll,subplot,f=None):
+	def correlogram(self, panel,ll,subplot,f):
+		return#currently disabled, in development
 		fgr,axs=subplot
 		lags=20
-		rho=stat.correlogram(self.panel, ll.e_norm_centered,lags)
+		rho=stat.correlogram(panel, ll.e_norm_centered,lags)
 		x=np.arange(lags+1)
 		axs.bar(x,rho,color='grey', width=0.5,label='correlogram')
 		name='Correlogram - residuals'
 		axs.set_title(name)
-		if f is None:
-			guif.display(self.charts[1],name,1,subplot)
-		else:
-			guif.save(subplot,f)
-		
-	def correlogram_variance(self,ll,subplot,f=None):
-		N,T,k=self.panel.X.shape
+		save(subplot,f)
+
+	def correlogram_variance(self, panel,ll,subplot,f):
+		return#currently disabled, in development
+		N,T,k=panel.X.shape
 		fgr,axs=subplot
 		lags=20
 		e2=ll.e_norm_centered**2
-		e2=(e2-self.panel.mean(e2))*self.panel.included[3]
-		rho=stat.correlogram(self.panel, e2,lags)
+		e2=(e2-anel.mean(e2))*panel.included[3]
+		rho=stat.correlogram(panel, e2,lags)
 		x=np.arange(lags+1)
 		axs.bar(x,rho,color='grey', width=0.5,label='correlogram')
 		name='Correlogram - squared residuals'
 		axs.set_title(name)
-		if f is None:
-			guif.display(self.charts[2],name,2,subplot)
-		else:
-			guif.save(subplot,f)
-	
+		save(subplot,f)
+
 def histogram(x,grid_range,grid_step):
 	N,k=x.shape
 	grid_n=int(2*grid_range/grid_step)
@@ -159,4 +156,9 @@ def histogram(x,grid_range,grid_step):
 		raise RuntimeError('Error in histogram calculation')
 	return histogram/N,grid
 
-	
+
+
+def save(subplot,save_file):
+	fgr,axs=subplot
+	fgr.savefig(save_file)
+	axs.clear()

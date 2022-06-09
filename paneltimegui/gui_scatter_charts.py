@@ -3,7 +3,6 @@
 
 import tkinter as tk
 import gui_functions as guif
-import functions as fu
 from shutil import copyfile
 
 class scatter_window(tk.Toplevel):
@@ -103,7 +102,7 @@ class scatter_charts(tk.Frame):
 			w=int(fgr.get_figwidth()*fgr.get_dpi())
 			h=int(fgr.get_figheight()*fgr.get_dpi())
 			chart=tk.Label(bgframe,width=w,height=h)
-			path=fu.obtain_fname(f'./output/{name}.png')
+			path=guif.obtain_fname(f'./output/{name}.png')
 			guif.display(chart,name,i,subplot,self.on_scatter_click,path)
 			return chart
 		

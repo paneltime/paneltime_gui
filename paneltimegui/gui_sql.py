@@ -6,8 +6,6 @@ from multiprocessing import pool
 
 import numpy as np
 import gui_scrolltext
-import paneltime
-import functions as fu
 import gui_script_handling
 
 
@@ -57,8 +55,8 @@ class sql_query(tk.Toplevel):
 		self.protocol("WM_DELETE_WINDOW", self.on_closing)
 	
 	def ok_pressed(self,event=None):
-		self.win.data['sql_str']='\n'+fu.clean_section(self.sql_str.get_all())
-		self.win.data['conn_str']=fu.clean_section(self.conn_str.get_all())
+		self.win.data['sql_str'] = '\n'+clean_section(self.sql_str.get_all())
+		self.win.data['conn_str'] = clean_section(self.conn_str.get_all())
 		res=self.win.exec(self.win.data['conn_str'])
 		if res==False:
 			return		
@@ -90,3 +88,12 @@ data['{name}']=load_SQL({sqlstr},conn)"""
 	def show(self):
 		self.win.grab_set()
 		self.deiconify()
+		
+		
+def clean_section(string):
+	for i in ['\n\n','\n\r','\r\n']:
+		while i in string:
+			string=string.replace(i,'\n')
+	if string[0]=='\n':
+		string=string[1:]
+	return string

@@ -8,10 +8,8 @@ import sys
 sys.path.append(__file__.replace("gui.py",''))
 import gui_charts
 import gui_functions as guif
-import functions as fu
 import os
 import gui_buttons
-import functions as fu
 import gui_right_tabs
 import gui_scrolltext
 import gui_main_tabs
@@ -35,7 +33,7 @@ class window(tk.Tk):
 		self.mc=None
 		self.geometry('%sx%s+%s+%s' %(self.winfo_screenwidth(),self.winfo_screenheight()-75,-5,0))
 		if 'nt'==os.name:
-			iconpath=os.path.join(fu.currentdir(),'paneltime.ico')
+			iconpath=os.path.join(os.path.dirname(__file__),'paneltime.ico')
 			self.iconbitmap(iconpath)	
 			self.iconpath=iconpath
 		else:

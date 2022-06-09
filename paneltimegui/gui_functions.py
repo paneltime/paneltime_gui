@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 from PIL import ImageTk, Image
+import os
 
 def setbutton(parent,text,command,side=None,anchor=None,fill=None,bg=None,relief=None):
 	btn=tk.Button(parent, text=text, command=command,anchor=anchor,bg=bg,relief=relief,bd=0)
@@ -60,3 +61,17 @@ def fix_fname(s,i=None):
 	return s
 
 
+
+def obtain_fname(name):
+
+	path=os.path.abspath(name)
+	path_dir=os.path.dirname(path)
+	if not os.path.exists(path_dir):
+		os.makedirs(path_dir)	
+
+	return path
+
+def join(path,iterative):
+	for i in iterative:
+		path=os.path.join(path,i)
+	return path

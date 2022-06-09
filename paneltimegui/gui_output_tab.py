@@ -4,9 +4,9 @@ import tkinter as tk
 import gui_charts
 import gui_scrolltext
 import gui_scatter_charts
+import gui_functions as fu
 from tkinter import ttk
 from tkinter import font
-import functions as fu
 import stat_functions as st
 import traceback
 import output
@@ -66,13 +66,6 @@ class output_tab(tk.Frame):
 		if not output_data is None:
 			if hasattr(output_data, 'chart_images'):
 				self.widget.stored_output_data=output_data
-				try:
-					self.charts.charts_from_stored(output_data.chart_images)
-				except Exception as e:
-					print(e)
-					print('Chart images not found in temp folder. Change settings to\n'
-						  'clean up the temp folder less frequently, in order ot avoid\n'
-						  'this problem again\n')
 				
 		if not 'menu_selections' in self.window.data:
 			self.window.data['menu_selections']=dict()
@@ -244,7 +237,6 @@ class output_tab(tk.Frame):
 		
 		if self.menu_buttons['DISTRIBUTION CHARTS'].button_main["fg"]==FG_NORMAL:
 			self.charts.plot(ll,panel)
-		self.widget.stored_output_data.chart_images=self.charts.get_images_for_storage()#for storing the editor
 		self.widget.stored_output_data.data=stored_data(ll,panel,computation,self.reg_table)#for storing the editor		
 		self.print()
 		
