@@ -4,7 +4,7 @@
 import tkinter as tk
 from tkinter import ttk
 import numpy as np
-from scipy import stats as scstats
+import stat_dist
 from paneltimegui import gui_functions as guif
 import os
 import shutil
@@ -14,7 +14,7 @@ from matplotlib import pyplot  as plt
 
 
 
-class process_charts(ttk.Frame):
+class ProcessCharts(ttk.Frame):
 	def __init__(self,window,master,main_tabs,tabs):
 		style = ttk.Style()
 		style.configure("TFrame", background='white')		
@@ -109,7 +109,7 @@ class GenerateCharts():
 		grid_range = 4
 		grid_step = 0.05	
 		h,grid = histogram(e,grid_range,grid_step)
-		norm = scstats.norm.pdf(grid)*grid_step	
+		norm = stat_dist.norm(grid, cdf = False)*grid_step	
 
 		axs.bar(grid,h,color='grey', width=0.025,label='histogram')
 		axs.plot(grid,norm,'green',label='normal distribution')

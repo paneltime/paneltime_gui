@@ -30,7 +30,6 @@ class window(tk.Tk):
 		tk.Tk.__init__(self)
 		self.title("Paneltime")
 		self.define_styles()
-		self.mc=None
 		self.geometry('%sx%s+%s+%s' %(self.winfo_screenwidth(),self.winfo_screenheight()-75,-5,0))
 		if 'nt'==os.name:
 			iconpath=os.path.join(os.path.dirname(__file__),'paneltime.ico')

@@ -5,6 +5,7 @@ import gui_charts
 import gui_scrolltext
 import gui_scatter_charts
 import gui_functions as fu
+from tkinter import font as tkfont
 from tkinter import ttk
 from tkinter import font
 import stat_functions as st
@@ -38,7 +39,7 @@ class output_tab(tk.Frame):
 		self.widget.columnconfigure(0,weight=1)			
 		
 		
-		self.charts = gui_charts.process_charts(window,self.widget,main_tabs,tabs)
+		self.charts = gui_charts.ProcessCharts(window,self.widget,main_tabs,tabs)
 		self.progress_bar=bar(self,exe_tab)
 		
 		self.progress_bar.grid(row=2, sticky=tk.EW)
@@ -198,9 +199,9 @@ class output_tab(tk.Frame):
 			return True
 		return False
 
-	def set_output_obj(self,ll,panel, computation,main_msg, dx_norm):
+	def set_output_obj(self,ll,panel, computation, dx_norm):
 		"sets the outputobject in the output" 
-		self.output=output.output(ll,panel, computation,main_msg, dx_norm)
+		self.output=output.output(ll,panel, computation, dx_norm)
 		
 		
 	def get_digits(self):
@@ -222,13 +223,8 @@ class output_tab(tk.Frame):
 		
 	#****UPDATE CALLS********
 		
-	def update_after_direction(self,computation,its, dx_norm):
-		self.output.update_after_direction(computation,its, dx_norm)
-		self.reg_table=self.output.reg_table()
-		self.print()
-		
-	def update_after_linesearch(self,computation,ll,panel,incr, dx_norm):
-		self.output.update_after_linesearch(computation,ll,incr, dx_norm)
+	def update(self,panel, computation,its, ll, incr, dx_norm):
+		self.output.update(computation,its, ll,incr, dx_norm)
 		if self.menu_buttons['DIAGNOSTICS'].button_main['bg']==BG_SELECTED:
 			self.statistics=self.output.statistics()
 			self.widget.stored_output_data.statistics=self.statistics
@@ -327,7 +323,7 @@ class output_tab(tk.Frame):
 		#for storing the editor
 		n=self.get_digits()
 
-		#tab_stops=self.reg_table.get_tab_stops(self.tab.widget.text_box.config()['font'][4])
+		#tab_stops=self.reg_table.get_tab_stops(X, tkfont.Font(font=self.tab.widget.text_box.config()['font'][4]))
 		#self.tab.widget.text_box.config(tabs=tab_stops)	
 		formatting={'bold_underline':[1]}
 		tab_stops=('30',tk.LEFT,'60',tk.LEFT,'290',tk.RIGHT,'450',tk.NUMERIC)
@@ -447,7 +443,8 @@ class output_tab(tk.Frame):
 		else:
 			self.tab.widget.text_box.configure(font=("Courier", 10))	
 		if not X is None:
-			tab_stops=output.get_tab_stops(X,self.tab.widget.text_box.config()['font'][4])
+			tab_stops=output.get_tab_stops(X,
+										   tkfont.Font(font=self.tab.widget.text_box.config()['font'][4]))
 		self.tab.widget.text_box.config(tabs=tab_stops)			
 		self.scatter.grid_forget()
 		self.scatter_norm.grid_forget()
@@ -808,10 +805,10 @@ class bar(tk.Frame):
 		self.progress=tk.Frame(self,background='#9cff9d',height=5,width=0)
 		self.progress.grid(row=1,column=0,sticky=tk.W)
 		
-	def set_progress(self,percent=None,text="",task=''):
+	def set_progress(self,perc=None,text="",task=''):
 		total_width=self.winfo_width()
-		if not percent==None:
-			self.progress.config(width=int(total_width*percent))
+		if not perc==None:
+			self.progress.config(width=int(total_width*perc))
 			self.progress.grid()
 		if len(task):
 			self.set_task(task)
